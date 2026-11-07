@@ -1,0 +1,83 @@
+PImage fondoMapa;
+PImage fondoMapa2;
+
+int escenaActual = 1;
+
+
+
+
+EN setup
+fondoMapa2 = loadImage("mapa2.png");
+
+en draw 
+
+imageMode(CORNER);
+
+if (escenaActual == 1) {
+  image(fondoMapa, 0, 0, width, height);
+}
+else if (escenaActual == 2) {
+  image(fondoMapa2, 0, 0, width, height);
+}
+
+dentro de void jugar
+void jugar() {
+  if (estadoDelJuego == 1) {
+    jugador.actualizar();
+
+    // PASAR DE HABITACION 1 A 2
+    if (escenaActual == 1 &&
+        jugador.posicion.x >= width &&
+        jugador.posicion.y > 250 &&
+        jugador.posicion.y < 430) {
+
+      escenaActual = 2;
+
+      jugador.posicion.x = 30;
+      jugador.posicion.y = 340;
+    }
+
+    // VOLVER DE HABITACION 2 A 1
+    if (escenaActual == 2 &&
+        jugador.posicion.x <= 0 &&
+        jugador.posicion.y > 250 &&
+        jugador.posicion.y < 430) {
+
+      escenaActual = 1;
+
+      jugador.posicion.x = width - 30;
+      jugador.posicion.y = 340;
+    }
+
+    // ACTUALIZAR LINTERNA
+    linterna.actualizar(jugador.posicion, jugador.angulo);
+
+    // ACTUALIZAR ENEMIGOS
+    for (Enemigo enemigo : enemigos) {
+      enemigo.actualizar(linterna);
+    }
+
+    // MOSTRAR ELEMENTOS
+    linterna.mostrar();
+    jugador.mostrar();
+
+    for (Enemigo enemigo : enemigos) {
+      enemigo.mostrar();
+    }
+  }
+}
+
+
+en jugador.pde
+
+posicion.x = constrain(posicion.x, 20, width + 20);
+posicion.y = constrain(posicion.y, 20, height - 20);
+
+
+
+en chocarconparedU()
+
+
+if (escenaActual == 2) {
+  return false;
+}
